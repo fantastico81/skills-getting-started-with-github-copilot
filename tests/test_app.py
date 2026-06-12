@@ -41,18 +41,26 @@ def client():
 
 
 def test_unregister_removes_participant(client):
-    response = client.post(
-        "/activities/Chess Club/unregister?email=michael@mergington.edu"
-    )
+    # Arrange
+    activity_name = "Chess Club"
+    email = "michael@mergington.edu"
 
+    # Act
+    response = client.post(f"/activities/{activity_name}/unregister?email={email}")
+
+    # Assert
     assert response.status_code == 200
-    assert "michael@mergington.edu" not in activities["Chess Club"]["participants"]
-    assert "daniel@mergington.edu" in activities["Chess Club"]["participants"]
+    assert email not in activities[activity_name]["participants"]
+    assert "daniel@mergington.edu" in activities[activity_name]["participants"]
 
 
 def test_unregister_returns_404_for_unknown_participant(client):
-    response = client.post(
-        "/activities/Chess Club/unregister?email=missing@mergington.edu"
-    )
+    # Arrange
+    activity_name = "Chess Club"
+    email = "missing@mergington.edu"
 
+    # Act
+    response = client.post(f"/activities/{activity_name}/unregister?email={email}")
+
+    # Assert
     assert response.status_code == 404
